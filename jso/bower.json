@@ -1,0 +1,7 @@
+{
+  "name": "jso",
+  "private": true,
+  "dependencies": {
+    "jso": "^2.0.3"
+  }
+}

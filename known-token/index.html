@@ -1,6 +1,6 @@
 <html>
 <head>
-    <title>jQuery Ajax Adama Test</title>
+    <title>Sample OAuth Application with Adama - Known/forever token</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
     <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
@@ -9,10 +9,13 @@
         $(document).ready(function() {
             $('#test-search').submit(function(e) {
                 e.preventDefault();
+                var url = 'https://api.araport.org/community/v0.3/araport/gene_summary_by_locus_v0.1/search';
+                var locus = 'AT1G65480';
+                $('#query').html('<h5>Querying <em>\'' + url + '\'</em> for data about <em>\'' + locus +'\'</em></h5>');
                 $('#info').html('<hr><h5>Loading data ... <i class="fa fa-spinner fa-pulse"></i></h5><hr>')
                 $.ajax({
-                    url: 'https://api.araport.org/community/v0.3/araport/gene_summary_by_locus_v0.1/search',
-                    data: { locus: 'AT1G65480' },
+                    url: url,
+                    data: { locus: locus },
                     headers: {'Authorization': 'Bearer ' + this.access_token.value},
                     type: 'GET',
                     error: function() {
@@ -25,6 +28,7 @@
             });
             $('#clear').click(function (e) {
                 e.preventDefault();
+                $('#query').empty();
                 $('#info').empty();
                 $('#access_token').val('');
             });
@@ -32,22 +36,23 @@
     </script>
 </head>
 <body>
-<p>
-<form id="test-search" class="form-inline">
-    <div class="form-group">
-        <input type="password" class="form-control" size="25" id="access_token" placeholder="Access Token">
+    <h3>Sample OAuth Application with Adama - Known/forever token</h3>
+    <p>
+    <form id="test-search" class="form-inline">
+        <div class="form-group">
+            <input type="password" class="form-control" size="25" id="access_token" placeholder="Access Token">
+        </div>
+        <button type="submit" class="btn btn-primary">Load query results using Adama!</button>
+        <button type="button" class="btn btn-danger" id="clear">Reset</button>
+    </form>
+    </p>
+    <div id="query"></div>
+    <div id="info"></div>
+    <br>
+    <div class="row">
+        <div class="col-sm-12">
+            <p>Demo created by Erik Ferlanti</p>
+        </div>
     </div>
-    <button type="submit" class="btn btn-primary">Load query results using Adama!</button>
-    <button type="button" class="btn btn-danger" id="clear">Reset</button>
-</form>
-</p>
-<div id="info"></div>
-<br>
-<div class="row">
-    <div class="col-sm-12">
-        <p>Demo created by Erik Ferlanti</p>
-    </div>
-</div>
 </body>
 </html>
-

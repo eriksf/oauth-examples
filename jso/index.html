@@ -1,0 +1,103 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+    <head>
+        <title> Sample OAuth Application with Adama - Implicit FLow</title>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+         <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+         <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+        <script type="text/javascript" src="bower_components/jso/build/jso.js"></script>
+
+        <script type="text/javascript">
+            $(document).ready(function () {
+                var access_token;
+                var jso;
+
+                var initFlow = function initFlow() {
+                    jso = new JSO({
+                        providerID: "jso-test",
+                        client_id: "OIUfWrAjl2G8Hy2CgECXr8wUuDMa",
+                        redirect_uri: "http://localhost:9000",
+                        authorization: "https://api.araport.org/oauth2/authorize",
+                        scopes: { request: ["PRODUCTION"]},
+                    });
+                    jso.callback();
+                    jso.getToken(function(token) {
+                        $('#token').html(token.access_token);
+                        access_token = token.access_token;
+                        console.log("I got the token: ", token);
+                    });
+                };
+
+                var warningMessage = function warningMessage(message) {
+                    return '<div class="alert alert-warning fade in" role="alert">' +
+                   '<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>' +
+                   '<span class="glyphicon glyphicon-warning-sign" aria-hidden="true"></span><span class="sr-only">Warning:</span> ' +
+                   message + '</div>';
+                };
+
+                $('#test-search').submit(function(e) {
+                    e.preventDefault();
+                    if (!access_token) {
+                        initFlow();
+                    } else {
+                        var url = 'https://api.araport.org/community/v0.3/araport/gene_summary_by_locus_v0.1/search';
+                        var locus = 'AT1G65480';
+                        $('#query').html('<h5>Querying <em>\'' + url + '\'</em> for data about <em>\'' + locus +'\'</em></h5>');
+                        $('#info').html('<hr><h5>Loading data ... <i class="fa fa-spinner fa-pulse"></i></h5><hr>');
+                        $.ajax({
+                            url: url,
+                            data: { locus: locus },
+                            headers: {'Authorization': 'Bearer ' + access_token},
+                            type: 'GET',
+                            error: function() {
+                                $('#info').html('<hr><p>An error has occurred</p><hr>');
+                            },
+                            success: function(data) {
+                                $('#info').html('<hr><pre>' + JSON.stringify(data, null, 2) + '</pre><hr>');
+                            }
+                        });
+                    }
+                });
+
+                $('#clear').click(function (e) {
+                    e.preventDefault();
+                    $('#query').empty();
+                    $('#info').empty();
+                    $('#status').empty();
+                });
+
+                $('#logout').click(function (e) {
+                    e.preventDefault();
+                    jso.wipeTokens();
+                    $('#token').html('none');
+                    access_token = '';
+                    $('#status').html(warningMessage('You have been logged out!'));
+                });
+
+                initFlow();
+            });
+       </script>
+    </head>
+
+    <body>
+        <h3>Sample OAuth Application with Adama - Implicit Flow</h3>
+        <div>Access token: <span id="token">none</span> </div>
+        <div id="status"></div>
+        <p>
+            <form id="test-search" class="form-inline">
+                <button type="submit" class="btn btn-primary">Load query results using Adama!</button>
+                <button type="button" class="btn btn-danger" id="clear">Reset</button>
+                <button type="button" class="btn btn-warning" id="logout">Logout</button>
+            </form>
+        </p>
+        <div id="query"></div>
+        <div id="info"></div>
+        <br>
+        <div class="row">
+            <div class="col-sm-12">
+                <p>Demo created by Erik Ferlanti</p>
+            </div>
+        </div>
+    </body>
+</html>
