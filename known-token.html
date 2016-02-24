@@ -1,0 +1,53 @@
+<html>
+<head>
+    <title>jQuery Ajax Adama Test</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('#test-search').submit(function(e) {
+                e.preventDefault();
+                $('#info').html('<hr><h5>Loading data ... <i class="fa fa-spinner fa-pulse"></i></h5><hr>')
+                $.ajax({
+                    url: 'https://api.araport.org/community/v0.3/araport/gene_summary_by_locus_v0.1/search',
+                    data: { locus: 'AT1G65480' },
+                    headers: {'Authorization': 'Bearer ' + this.access_token.value},
+                    type: 'GET',
+                    error: function() {
+                        $('#info').html('<hr><p>An error has occurred</p><hr>');
+                    },
+                    success: function(data) {
+                        $('#info').html('<hr><pre>' + JSON.stringify(data, null, 2) + '</pre><hr>');
+                    }
+                });
+            });
+            $('#clear').click(function (e) {
+                e.preventDefault();
+                $('#info').empty();
+                $('#access_token').val('');
+            });
+        });
+    </script>
+</head>
+<body>
+<p>
+<form id="test-search" class="form-inline">
+    <div class="form-group">
+        <input type="password" class="form-control" size="25" id="access_token" placeholder="Access Token">
+    </div>
+    <button type="submit" class="btn btn-primary">Load query results using Adama!</button>
+    <button type="button" class="btn btn-danger" id="clear">Reset</button>
+</form>
+</p>
+<div id="info"></div>
+<br>
+<div class="row">
+    <div class="col-sm-12">
+        <p>Demo created by Erik Ferlanti</p>
+    </div>
+</div>
+</body>
+</html>
+
