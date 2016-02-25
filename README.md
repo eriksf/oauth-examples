@@ -38,7 +38,7 @@ $ curl -u "<araport-username>" -X POST --data "clientName=jso-test&description=j
 }
 ```
 
-Replace the client details in the initial JSO call in jso/index.html with the values received here.
+Replace the client details in the initial JSO call in **jso/index.html** with the values received here.
 
 For more detailed instructions see [Add OAuth Support to a Legacy App With Four Lines of JS](https://www.araport.org/node/1308).
 
