@@ -7,6 +7,41 @@ JavaScript library.
 
 ## Prerequisites
 
+For the JSO example, you will need to have an [Araport account](https://www.araport.org/user/register) and also register an OAuth2 client at Araport. To register a client:
+
+```
+$ curl -u "<araport-username>" -X POST --data "clientName=jso-test&description=jso-test&callbackUrl=http://localhost:9000" "https://api.araport.org/clients/v2"
+
+{
+    "message": "Client created successfully.",
+    "result": {
+        "_links": {
+            "self": {
+                "href": "http://araport-api.tacc.utexas.edu/clients/v2/jso-test"
+            },
+            "subscriber": {
+                "href": "http://araport-api.tacc.utexas.edu/profiles/v2/eriksf"
+            },
+            "subscriptions": {
+                "href": "http://araport-api.tacc.utexas.edu/clients/v2/jso-test/subscriptions/"
+            }
+        },
+        "callbackUrl": "http://localhost:9000",
+        "consumerKey": "****************************",
+        "consumerSecret": "****************************",
+        "description": "jso-test",
+        "name": "jso-test",
+        "tier": "Unlimited"
+    },
+    "status": "success",
+    "version": "2.0.0-SNAPSHOT-rc3fad"
+}
+```
+
+Replace the client details in the initial JSO call in jso/index.html with the values received here.
+
+For more detailed instructions see [Add OAuth Support to a Legacy App With Four Lines of JS](https://www.araport.org/node/1308).
+
 You need to have the following installed:
 
 - [Node.js + npm](http://nodejs.org/)
